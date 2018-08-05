@@ -15,44 +15,21 @@ class CalenderViewController: UIViewController, FSCalendarDataSource, FSCalendar
     
     @IBOutlet weak var calenderView: FSCalendar!
     @IBOutlet weak var dateLabel: UILabel!
+    @IBOutlet weak var memoLabel: UILabel!
     @IBOutlet weak var memoTextField: UITextField!
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let toolBar: UIView = UIView()
-        toolBar.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: 45)
-        toolBar.backgroundColor = UIColor(red: 238/255, green: 238/255, blue: 238/255, alpha: 1.0)
-        
-        let barTextField: UITextField = UITextField()
-        barTextField.frame = CGRect(x: 5, y: 5, width: self.view.frame.width - 65, height: 35)
-        barTextField.placeholder = "コメント..."
-        barTextField.borderStyle = UITextBorderStyle.roundedRect
-        
-        let barButton: UIButton = UIButton(type: UIButtonType.system)
-        barButton.frame = CGRect(x: barTextField.frame.width + 10, y: 5, width: 50, height: 35)
-        barButton.setTitle("送信", for: UIControlState.normal)
-        barButton.addTarget(self, action: #selector(buttonEvent(_:)), for: UIControlEvents.touchUpInside)
-        
-        toolBar.addSubview(barTextField)
-        toolBar.addSubview(barButton)
-        
-        memoTextField.inputAccessoryView = toolBar
+        //Text Fieldのdelegate通知先を設定
         memoTextField.delegate = self
-        
-        
+        let today :Date =  Date()
+        print(today)
+        //カレンダーが縦にスクロールできるように
         calenderView.scrollDirection = .vertical
-        
-        let calendar = Calendar.current
-        let selectData =  calendar.date(from: DateComponents(year: 2018, month: 5, day: 20))
-        calenderView.select(selectData)
 
         // Do any additional setup after loading the view.
     }
     
-    @objc func buttonEvent(_ sender: UIButton) {
-        addMemo(date: "05/18", title: "example", content: "hoge")
-    }
-
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -64,6 +41,20 @@ class CalenderViewController: UIViewController, FSCalendarDataSource, FSCalendar
         let month = tmpDate.component(.month, from: date)
         let day = tmpDate.component(.day, from: date)
         dateLabel.text = "\(year)/\(month)/\(day)"
+        print(type(of: year))
+        getMemoByDate(date: dateLabel.text!)
+    }
+    
+    func textFieldShouldReturn(_ memoTextField: UITextField) -> Bool {
+        memoTextField.resignFirstResponder()
+        
+        if let newMemo = memoTextField.text {
+            addMemo(date: dateLabel.text ?? "2018/06/05", title: newMemo, content: newMemo)
+            print(newMemo)
+            print(dateLabel.text ?? "hoge")
+            memoLabel.text = newMemo
+        }
+        return true
     }
 
 }

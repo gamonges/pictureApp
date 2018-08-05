@@ -17,6 +17,17 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     @IBOutlet weak var cameraView: UIImageView!
     @IBOutlet weak var resultLabel: UILabel!
     
+    @IBAction func loadFromCamerarole(_ sender: Any) {
+        if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.photoLibrary){
+           // UIImagePickerControllerのインスタンスを生成
+            let picker:UIImagePickerController = UIImagePickerController()
+            //カメラロールから写真を読み込み
+            picker.sourceType = UIImagePickerControllerSourceType.photoLibrary
+            picker.delegate = self
+            self.present(picker, animated: true, completion: nil)
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
